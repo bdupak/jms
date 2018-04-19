@@ -6,8 +6,10 @@ package com.epam;
  */
 public class App 
 {
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+    public static void main( String[] args ) throws Exception {
+        ActiveMq activeMq = new ActiveMq();
+        activeMq.connection(ActiveMq.QUEUE_JMS_TEST);
+        activeMq.send("Hello people");
+        activeMq.close();
     }
 }
