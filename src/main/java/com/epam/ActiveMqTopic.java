@@ -7,6 +7,7 @@ import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
+import java.util.Random;
 
 public class ActiveMqTopic extends JmsAbstract {
 
@@ -15,7 +16,7 @@ public class ActiveMqTopic extends JmsAbstract {
         LOG.info("ActiveMQ -> topic: " + name + ", url broker: " + URL_BROKER);
         connectionFactory = new ActiveMQConnectionFactory(URL_BROKER);
         connection = connectionFactory.createConnection();
-        connection.setClientID("12345");
+        connection.setClientID("12345" + new Random().nextInt(100));
         connection.start();
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         destination = new ActiveMQTopic(name);
@@ -31,9 +32,14 @@ public class ActiveMqTopic extends JmsAbstract {
                 if (message instanceof TextMessage) {
                     TextMessage textMessage = (TextMessage) message;
                     LOG.info("ActiveMQ -> received: " + textMessage.getText());
+                    if (textMessage.getText().equals("END")) {
+                        close();
+                    }
                 }
             } catch (JMSException e) {
                 System.out.println("Caught:" + e);
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });

@@ -2,9 +2,45 @@ package com.epam;
 
 
 public class Main {
+
+    private static Object object = new Object();
+
     public static void main( String[] args ) throws Exception {
-        send();
-        read();
+
+        Thread threadRead = new Thread(()->{
+            try {
+                read();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        Thread threadTwoRead = new Thread(()->{
+            try {
+                read();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        Thread threadThreeRead = new Thread(()->{
+            try {
+                read();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        Thread threadSend = new Thread(() -> {
+            try {
+                send();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        threadThreeRead.start();
+        threadRead.start();
+        threadTwoRead.start();
+        threadSend.start();
     }
 
     private static void send() throws Exception {
@@ -19,7 +55,6 @@ public class Main {
         Jms activeMq = new ActiveMqTopic();
         activeMq.connection(ActiveMqQueue.TOPIC_JMS_TEST);
         activeMq.read();
-//        activeMq.close();
     }
 
 }

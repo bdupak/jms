@@ -63,7 +63,7 @@ public abstract class JmsAbstract implements Jms {
     }
 
     @Override
-    public void read() throws JMSException {
+    public void read() throws Exception {
         LOG.info("ActiveMQ -> read message: ");
         consumer = session.createConsumer(destination);
         connection.start();
